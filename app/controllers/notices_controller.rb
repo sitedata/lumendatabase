@@ -185,7 +185,7 @@ class NoticesController < ApplicationController
     return false unless request.headers['HTTP_X_AUTHENTICATION_TOKEN']
     User.find_by_authentication_token(
       request.headers['HTTP_X_AUTHENTICATION_TOKEN']
-    ).has_role?(Role.researcher)
+    ).role?(Role.researcher)
   end
 
   def build_entity_notice_roles(model_class)

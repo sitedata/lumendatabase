@@ -4,23 +4,23 @@ class Ability
   def initialize(user)
     return unless user
 
-    if user.has_role?(Role.submitter)
+    if user.role?(Role.submitter)
       can :submit, Notice
     end
 
-    if user.has_role?(Role.redactor)
+    if user.role?(Role.redactor)
       grant_admin_access
       grant_redact
     end
 
-    if user.has_role?(Role.publisher)
+    if user.role?(Role.publisher)
       grant_admin_access
       grant_redact
 
       can :publish, Notice
     end
 
-    if user.has_role?(Role.admin)
+    if user.role?(Role.admin)
       grant_admin_access
       grant_redact
 
@@ -35,11 +35,11 @@ class Ability
       can :pdf_requests, :all
     end
 
-    if user.has_role?(Role.super_admin)
+    if user.role?(Role.super_admin)
       can :manage, :all
     end
 
-    if user.has_role?(Role.researcher)
+    if user.role?(Role.researcher)
       can :read, Notice
     end
   end

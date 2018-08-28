@@ -28,18 +28,17 @@ class TermSearch
     end
   end
 
-  def apply_to_search(*)
-  end
+  def apply_to_search(*); end
 
   def apply_to_query(query, param, value, operator)
-    if handles?(param)
-      if value.is_a?(Array)
-        value.each do |sub_val|
-          apply_to_query_single(query, sub_val, operator)
-        end
-      else
-        apply_to_query_single(query, value, operator)
+    return unless handles?(param)
+
+    if value.is_a?(Array)
+      value.each do |sub_val|
+        apply_to_query_single(query, sub_val, operator)
       end
+    else
+      apply_to_query_single(query, value, operator)
     end
   end
 
@@ -49,8 +48,7 @@ class TermSearch
     query[:bool][:must] << term_query
   end
 
-  def register_filter(*)
-  end
+  def register_filter(*); end
 
   private
 

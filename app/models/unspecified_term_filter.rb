@@ -8,19 +8,20 @@ class UnspecifiedTermFilter < TermFilter
   end
 
   def apply_to_search(searcher, param, value)
-    if handles?(param)
-      if unspecified_param?(param)
-        unspecified_filter(searcher)
-      else
-        super
-      end
+    return unless handles?(param)
+
+    if unspecified_param?(param)
+      unspecified_filter(searcher)
+    else
+      super
     end
   end
 
   private
 
   def handles?(parameter_of_concern)
-    parameter == parameter_of_concern.to_sym || unspecified_param?(parameter_of_concern)
+    parameter == (parameter_of_concern.to_sym ||
+                 unspecified_param?(parameter_of_concern))
   end
 
   def unspecified_param?(parameter_of_concern)
