@@ -24,7 +24,7 @@ class RiskTrigger < ActiveRecord::Base
     end
   end
 
-  def google_defamation_notice(notice)
+  def google_defamation_notice?(notice)
     (notice.submitter.try(:email) == 'google@lumendatabase.org' &&
      notice.try(:type) == 'Defamation')
   end
