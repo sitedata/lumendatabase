@@ -41,8 +41,13 @@ describe DMCA, type: :model do
   end
 
   context 'entity notice roles' do
+    it 'has the expected entity notice roles' do
+      expected = %w[recipient sender principal submitter]
+      expect(described_class::DEFAULT_ENTITY_NOTICE_ROLES).to match_array expected
+    end
+
     context 'with entities' do
-      %w[sender principal recipient].each do |role_name|
+      described_class::DEFAULT_ENTITY_NOTICE_ROLES.each do |role_name|
         context "##{role_name}" do
           it "returns entity of type #{role_name}" do
             # note: must use role names we're not testing in the factory
@@ -86,24 +91,13 @@ describe DMCA, type: :model do
   end
 
   context '#auto_redact' do
-    it 'calls RedactsNotices#redact on itself' do
+    it 'calls InstanceRedactor#redact on itself' do
       notice = DMCA.new
-      redactor = RedactsNotices.new
+      redactor = InstanceRedactor.new
       expect(redactor).to receive(:redact).with(notice)
-      expect(RedactsNotices).to receive(:new).and_return(redactor)
+      expect(InstanceRedactor).to receive(:new).and_return(redactor)
 
       notice.auto_redact
-    end
-  end
-
-  context '#copy_id_to_submission_id' do
-    it 'copies id to submission_id' do
-      id_value = 100
-      notice = build(:dmca)
-      expect(notice).to receive(:id).and_return(id_value)
-      expect(notice).to receive(:update_column).with(:submission_id, id_value)
-
-      notice.copy_id_to_submission_id
     end
   end
 
@@ -391,6 +385,15 @@ describe DMCA, type: :model do
 
       expect(notice.submitter).to be_an(Entity)
       expect(notice.published).to be false
+    end
+  end
+
+  context '#entity_notice_roles' do
+    it 'sets the default kind of entities' do
+      notice = create(:dmca, role_names: %w[sender principal])
+
+      expect(notice.principal.kind).to eq('individual')
+      expect(notice.sender.kind).to eq('individual')
     end
   end
 end
