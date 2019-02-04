@@ -11,17 +11,16 @@ module NoticesHelper
     "#{instance.type.tableize.singularize}_works"
   end
 
-  def display_date_field(record, field)
-    return unless (date = record.send(field))
-    time_tag date, date.to_s(:simple)
-  end
-
   def date_sent(notice)
     display_date_field(notice, :date_sent)
   end
 
   def date_received(notice)
     display_date_field(notice, :date_received)
+  end
+
+  def date_submitted(notice)
+    display_date_field(notice, :created_at)
   end
 
   def subject(notice)
@@ -60,6 +59,11 @@ module NoticesHelper
   end
 
   private
+
+  def display_date_field(record, field)
+    return unless (date = record.send(field))
+    time_tag date, date.to_s(:simple)
+  end
 
   def infringing_url_label(notice)
     case notice
