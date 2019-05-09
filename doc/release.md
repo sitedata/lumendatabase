@@ -10,6 +10,7 @@ April 2019
 - Add cron job to run `lumen:generate_court_order_report` once per week
 - Add cron job to delete court order reports that are > 3 weeks old
 - add USER_CRON_EMAIL env
+- add USER_CRON_MAGIC_DIR env
 
 ## Hotfix
 * Write code, code-review, and merge into `dev` via the normal process.

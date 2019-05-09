@@ -216,8 +216,7 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.12.2)
     multipart-post (2.0.0)
-    mysql2 (0.4.3)
-    naught (1.1.0)
+    mysql2 (0.4.10)
     neat (1.3.0)
       bourbon (>= 2.1)
       sass (>= 3.2)
@@ -463,7 +462,7 @@ DEPENDENCIES
   memory_profiler
   mime-types
   minitest
-  mysql2
+  mysql2 (~> 0.4.1)
   neat
   oink
   paperclip (~> 5)
