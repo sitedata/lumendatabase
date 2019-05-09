@@ -56,7 +56,7 @@ Chill::Application.configure do
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = (ENV['MAILER_DELIVERY_METHOD'] || :smtp).to_sym
   config.action_mailer.smtp_settings = SMTP_SETTINGS
 
   # Enable threaded mode
@@ -76,7 +76,6 @@ Chill::Application.configure do
   config.action_mailer.default_url_options = {
     host: (ENV['EMAIL_DOMAIN'] || 'lumendatabase.org')
   }
-  config.action_mailer.default_url_options = { host: (ENV['EMAIL_DOMAIN'] || 'chillingeffects.org') }
 
   config.lograge.enabled = true
 end
