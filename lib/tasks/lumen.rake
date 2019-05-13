@@ -691,9 +691,17 @@ where works.id in (
     Dir.mkdir(working_dir) unless Dir.exist?(working_dir)
 
     # Fetch files and write them to the target directory.
-    files = FileUpload.where(
-      notice: CourtOrder.where('created_at > ?', 1.week.ago)
-    )
+    order_ids = if ENV['EXCLUDE_ENTITY_NAMES']
+                  CourtOrder.where('notices.created_at > ?', 1.week.ago)
+                            .includes(:entities)
+                            .references(:entities)
+                            .where.not(entities: {
+                              name: ENV['EXCLUDE_ENTITY_NAMES'].split(',')
+                            }).distinct.pluck(:id)
+                else
+                  CourtOrder.where('created_at > ?', 1.week.ago).pluck(:id)
+                end
+    files = FileUpload.where(notice: order_ids)
     files.each do |f|
       # The first two params ensure the filename is useful; the third ensures
       # it is unique.
