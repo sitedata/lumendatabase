@@ -723,7 +723,7 @@ where works.id in (
     HEREDOC
 
     Net::SMTP.start(SMTP_SETTINGS[:address]) do |smtp|
-      smtp.send_message mailtext, 'no-reply@lumendatabase.org', email
+      smtp.send_message mailtext, Chill::Application.config.default_sender, email
     end
   end
 
