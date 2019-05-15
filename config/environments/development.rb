@@ -35,14 +35,20 @@ Chill::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # Do not compress assets
-  config.assets.compress = false
+  # Compress assets if and only if a COMPRESS_ASSETS env is present. This is
+  # important because we use development mode to run the asset pipeline in
+  # production, in order to avoid loading the asset pipeline gems into prod
+  # memory.
+  config.assets.compress = ENV['COMPRESS_ASSETS'].present?
 
   # Expands the lines which load the assets
   config.assets.debug = true
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( rails_admin/rails_admin.css rails_admin/rails_admin.js )
+  config.assets.precompile += %w(
+    rails_admin/rails_admin.css
+    rails_admin/rails_admin.js
+  )
 
   config.action_controller.action_on_unpermitted_parameters = :raise
 

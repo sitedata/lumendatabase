@@ -107,6 +107,7 @@ their own commit.
 - `BATCH_SIZE` - batch size of model items indexed during each run of Elasticsearch re-indexing
 - `SEARCH_SLEEP` - used in specs only, time out of Elasticsearch searches
 - `RACK_ENV` - Rack environment
+- `COMPRESS_ASSETS` - if present, assets will be compressed
 
 #### Email setup
 
