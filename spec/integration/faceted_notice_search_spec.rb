@@ -27,7 +27,7 @@ feature 'Faceted search of Notices', search: true do
         facet = if facet_type == :topic_facet
                   inside_facet.topics.first.name
                 elsif facet_type == :tag_list_facet
-                  inside_facet.tags.first
+                  inside_facet.tags.first.name
                 elsif facet_type == :country_code_facet
                   'BH'
                 else
@@ -86,16 +86,5 @@ feature 'Faceted search of Notices', search: true do
       expect(page).to have_n_results 1
       expect(page).to have_words(notice.title)
     end
-  end
-
-  def with_a_faceted_search(facet_name, facet_attribute_name)
-    sleep((ENV['SEARCH_SLEEP'] && ENV['SEARCH_SLEEP'].to_i) || 1)
-    results = Notice.search do
-      query { match(:_all, 'title') }
-      facet facet_name do
-        terms facet_attribute_name, size: 10
-      end
-    end
-    yield results
   end
 end

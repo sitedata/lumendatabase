@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 require 'rake'
-require 'ingestor'
-require 'blog_importer'
-require 'question_importer'
 require 'collapses_topics'
 require 'csv'
 
@@ -12,102 +9,6 @@ namespace :lumen do
   task delete_search_index: :environment do
     Notice.__elasticsearch__.delete_index!
     sleep 5
-  end
-
-  desc "Import chillingeffects data from Mysql"
-  task import_notices_via_mysql: :environment do
-    name = ENV['IMPORT_NAME']
-    base_directory = ENV['BASE_DIRECTORY']
-    where_fragment = ENV['WHERE']
-
-    unless name && base_directory && where_fragment
-      puts "You need to give an IMPORT_NAME, BASE_DIRECTORY and WHERE fragment"
-      puts "See IMPORTING.md for additional details about environment variables necessary to import via mysql"
-      exit
-    end
-
-    Rails.logger.info "legacy import start name: #{name}, base_directory: #{base_directory}, where: \"#{where_fragment}\""
-
-    record_source = Ingestor::Legacy::RecordSource::Mysql.new(
-      where_fragment, name, base_directory
-    )
-
-    ingestor = Ingestor::Legacy.new(record_source)
-    ingestor.import
-
-    Rails.logger.info "legacy import done name: #{name}"
-  end
-
-  desc "Import latest legacy chillingeffects data from Mysql"
-  task import_new_notices_via_mysql: :environment do
-    # Configure the record_source
-    latest_original_notice_id = Notice.maximum(:original_notice_id).to_i
-    name = "latest-from-#{latest_original_notice_id}"
-    base_directory = ENV['BASE_DIRECTORY']
-    where_fragment = "tNotice.NoticeID > #{latest_original_notice_id}"
-
-    Rails.logger.info "legacy import start name: #{name}, base_directory: #{base_directory}, where: \"#{where_fragment}\""
-
-    record_source = Ingestor::Legacy::RecordSource::Mysql.new(
-      where_fragment, name, base_directory
-    )
-    ingestor = Ingestor::Legacy.new(record_source)
-    ingestor.import
-
-    Rails.logger.info "legacy import done name: #{name}"
-  end
-
-  desc "Import notice error legacy chillingeffects data from Mysql"
-  task import_error_notices_via_mysql: :environment do
-    # Configure the record_source
-    error_original_notice_ids = NoticeImportError.pluck(:original_notice_id).join(", ")
-    name = "error_notices"
-    base_directory = ENV['BASE_DIRECTORY']
-
-    record_source = Ingestor::Legacy::RecordSource::Mysql.new(
-      "tNotice.NoticeID IN (#{error_original_notice_ids})",
-      name, base_directory
-    )
-    ingestor = Ingestor::Legacy.new(record_source)
-    ingestor.import
-  end
-
-  desc "Import failed API submissions from Mysql"
-  task import_failed_api_notices_via_mysql: :environment do
-    # Configure the record_source
-    failed_ids_file = Rails.root.to_s + '/tmp/failed_ids.csv'
-    fail_import = true
-    failed_original_notice_ids = Array.new
-    CSV.foreach(failed_ids_file, :headers => false) do |row|
-      failed_original_notice_ids << row
-    end
-    failed_original_notice_ids = failed_original_notice_ids.join(", ")
-
-    name = "failed_api_submissions"
-    base_directory = ENV['BASE_DIRECTORY']
-
-    record_source = Ingestor::Legacy::RecordSource::Mysql.new(
-      "tNotice.NoticeID IN (#{failed_original_notice_ids})",
-      name, base_directory
-    )
-    ingestor = Ingestor::Legacy.new(record_source)
-    ingestor.import(fail_import)
-  end
-
-  desc 'Import blog entries'
-  task import_blog_entries: :environment do
-    with_file_name do |file_name|
-      importer = BlogImporter.new(file_name)
-      importer.import
-    end
-  end
-
-  desc 'Import questions'
-  task import_questions: :environment do
-    with_file_name do |file_name|
-      importer = QuestionImporter.new(file_name)
-      importer.import
-    end
   end
 
   desc 'Post-migration cleanup'
@@ -785,7 +686,7 @@ where works.id in (
 
   desc 'Send notifications about file uploads updates'
   task send_file_uploads_notifications: :environment do
-    date_time_task = proc { "[#{Time.now.strftime("%d/%m/%Y %H:%M:%S")}] [rake send_file_uploads_notifications]" }
+    date_time_task = proc { "[#{Time.now.strftime("%d/%m/%Y %H:%M:%S")}] [rails send_file_uploads_notifications]" }
 
     puts "#{date_time_task.call} Starting a new task run"
 
@@ -806,7 +707,7 @@ where works.id in (
 
         TokenUrlsMailer.notice_file_uploads_updates_notification(
           token_url.email, token_url, doc_notification.notice
-        ).deliver_later
+        ).deliver_now
 
         token_url.update_attribute(:expiration_date, Time.now + 24.hours)
       end
