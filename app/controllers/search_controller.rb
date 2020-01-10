@@ -70,12 +70,16 @@ class SearchController < ApplicationController
 
   def wrap_instances
     @ids_to_results = @searchdata.results.map { |r| [r._source[:id], r] }.to_h
-    instances = self.class::SEARCHED_MODEL.where(id: @ids_to_results.keys)
     # Because the instances are in db order, we'll need to re-sort them to
     # preserve the elasticsearch order. This is preferable to iterating through
     # the elasticsearch results and fetching one db item each time, however;
     # we used to do that and all those roundtrips were costing us in
     # performance.
+    # `instances` is defined in subclasses. Originally it was a variable here
+    # storing a database fetch here, but for performance reasons we need to use
+    # .pluck. But this breaks the abstraction as we have different available
+    # attributes for entities than for notices; each model needs to tell
+    # search what to do.
     instances.map { |r| augment_instance(r) }
              .sort_by { |a| @ids_to_results.keys.index(a[:id]) }
   end

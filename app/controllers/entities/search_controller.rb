@@ -18,4 +18,8 @@ class Entities::SearchController < SearchController
       end
     end
   end
+
+  def instances
+    self.class::SEARCHED_MODEL.where(id: @ids_to_results.keys)
+  end
 end

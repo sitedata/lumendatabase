@@ -18,4 +18,10 @@ class Notices::SearchController < SearchController
       searcher.sort_by = sort_by(params[:sort_by]) if params[:sort_by]
     end
   end
+
+  def instances
+    self.class::SEARCHED_MODEL.where(id: @ids_to_results.keys)
+                              .select(:id, :title, :date_received, :created_at)
+                              .includes(:entity_notice_roles)
+  end
 end
