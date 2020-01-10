@@ -22,6 +22,5 @@ class Notices::SearchController < SearchController
   def instances
     self.class::SEARCHED_MODEL.where(id: @ids_to_results.keys)
                               .select(:id, :title, :date_received, :created_at)
-                              .includes(:entity_notice_roles)
   end
 end
