@@ -177,7 +177,6 @@ GEM
     factory_bot_rails (5.0.2)
       factory_bot (~> 5.0.2)
       railties (>= 4.2.0)
-    fakeweb (1.3.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.3)
@@ -358,7 +357,7 @@ GEM
       mail
     record_tag_helper (1.0.0)
       actionview (~> 5.x)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
     ref (2.0.0)
     regexp_parser (1.5.1)
     remotipart (1.4.4)
@@ -504,7 +503,6 @@ DEPENDENCIES
   elasticsearch-model (~> 5.0)
   elasticsearch-rails (~> 5.0)
   factory_bot_rails
-  fakeweb
   flutie
   jquery-placeholder-rails
   jquery-rails
@@ -534,7 +532,7 @@ DEPENDENCIES
   recaptcha
   recipient_interceptor
   record_tag_helper (~> 1.0)
-  redcarpet
+  redcarpet (>= 3.5.1)
   rspec-collection_matchers (~> 1.1, >= 1.1.2)
   rspec-rails
   ruby-prof

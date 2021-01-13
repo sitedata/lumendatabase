@@ -39,7 +39,7 @@ gem 'rails_admin_tag_list', git: 'https://github.com/berkmancenter/rails_admin_t
 gem 'recaptcha'
 gem 'recipient_interceptor', require: false
 gem 'record_tag_helper', '~> 1.0'
-gem 'redcarpet'
+gem 'redcarpet', '>= 3.5.1'
 gem 'select2-rails', '~> 4.0', '>= 4.0.3'
 gem 'simple_form'
 gem 'skylight'
