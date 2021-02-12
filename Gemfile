@@ -9,7 +9,7 @@ gem 'ancestry'
 gem 'bootsnap'
 gem 'bootstrap-datepicker-rails'
 gem 'cancancan'
-gem 'comfortable_mexican_sofa'
+gem 'comfortable_mexican_sofa', '>= 2.0.19'
 # country_select has breaking changes in 2.x:
 # https://github.com/stefanpenner/country_select/blob/master/UPGRADING.md
 # It also removes CountrySelect::ISO_COUNTRIES_FOR_SELECT in 1.3, which is a
@@ -33,8 +33,8 @@ gem 'pg', '~> 1.1.4'
 gem 'rack'
 gem 'rack-attack'
 gem 'rack-mini-profiler'
-gem 'rails', '~> 5.2.0'
-gem 'rails_admin'
+gem 'rails', '~> 6.0.3', '>= 6.0.3.5'
+gem 'rails_admin', '>= 2.0.1'
 gem 'rails_admin_tag_list', git: 'https://github.com/berkmancenter/rails_admin_tag_list'
 gem 'recaptcha'
 gem 'recipient_interceptor', require: false
